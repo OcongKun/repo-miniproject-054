@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Website Informasi Kegiatan</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f4f6f8; }
+        .container { background: white; padding: 24px; border-radius: 12px; max-width: 500px; margin: auto; }
+        input, select, button { width: 100%; padding: 10px; margin-top: 10px; box-sizing: border-box; }
+        button { background: #1f4e79; color: white; border: none; cursor: pointer; font-weight: bold; }
+        #result { margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 8px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Estimasi Biaya Konsumsi Mahasiswa</h2>
+        <p>Gunakan kalkulator ini untuk menghitung estimasi biaya kegiatan berdasarkan ketentuan harga konsumsi.</p>
+        
+        <label>Jumlah Peserta:</label>
+        <input type="number" id="jumlah" placeholder="Contoh: 40" required>
+
+        <label>Jenis Konsumsi:</label>
+        <select id="jenis">
+            <option value="snack">Snack (Rp15.000/peserta)</option>
+            <option value="makan">Makan (Rp30.000/peserta)</option>
+            <option value="lengkap">Lengkap (Rp45.000/peserta)</option>
+        </select>
+
+        <button onclick="hitungBiaya()">Hitung Estimasi Biaya</button>
+
+        <div id="result">Hasil JSON akan tampil di sini...</div>
+    </div>
+
+    <script>
+        async function hitungBiaya() {
+            const jumlah = document.getElementById('jumlah').value;
+            const jenis = document.getElementById('jenis').value;
+
+            if(!jumlah) { alert("Masukkan jumlah peserta!"); return; }
+
+            // GANTI TEKS DI BAWAH INI DENGAN URL AZURE FUNCTIONS LU
+            const apiUrl = `https://func-serverless-054-gyfygdgrhqc2dwam.eastasia-01.azurewebsites.net/api/HttpPraktikum&jumlah=${jumlah}&jenis=${jenis}`;
+
+            document.getElementById('result').innerHTML = "Menghitung...";
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                // Menampilkan response JSON ke layar UI
+                document.getElementById('result').innerHTML = `
+{
+  "jumlah": ${data.jumlah},
+  "jenis": "${data.jenis}",
+  "hargaPerPeserta": ${data.hargaPerPeserta},
+  "total": ${data.total},
+  "timestamp": "${data.timestamp}"
+}`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = "Gagal memanggil API. Pastikan CORS di Azure Functions sudah diizinkan (allow *).";
+            }
+        }
+    </script>
+</body>
+</html>
