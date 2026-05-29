@@ -38,7 +38,6 @@
 
             if(!jumlah) { alert("Masukkan jumlah peserta!"); return; }
 
-            // GANTI TEKS DI BAWAH INI DENGAN URL AZURE FUNCTIONS LU
             const apiUrl = `https://func-serverless-054-gyfygdgrhqc2dwam.eastasia-01.azurewebsites.net/api/HttpPraktikum?jumlah=${jumlah}&jenis=${jenis}`;
 
             document.getElementById('result').innerHTML = "Menghitung...";
